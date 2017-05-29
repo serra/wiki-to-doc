@@ -30,7 +30,7 @@ import os
 import sys
 import shutil
 import subprocess
-from tempfile import mkstemp
+import yaml
 
 # mkdocs used only in the command line, imported just to ensure it's installed
 try:
@@ -52,6 +52,8 @@ WORKING_DIR = os.path.join(home, "wiki-to-doc")
 MKDOCS_DIR = os.path.join(WORKING_DIR, MKDOCS_FOLDER)
 
 DEFAULT_INDEX = 'Home'
+
+OUT_DIR = os.path.join(WORKING_DIR, 'sites', WIKI_NAME)
 
 
 def pull_wiki_repo():
@@ -98,26 +100,20 @@ def pull_wiki_repo():
 
 def edit_mkdocs_config():
     """
-    Edits the mkdocs.yml MkDocs configuration file to include all markdown
-    files as part of the documentation.
-    These files are created by default with the '.md' extension and it is 
-    assumed no other file extensions are to be linked.
+    Create mkdocs.yml file from metadata
     :return: Boolean indicating the success of the operation.
     """
-    path_list = []
-    for file in os.listdir(os.path.join(MKDOCS_DIR, WIKI_NAME)):
-        if file.endswith(".md"):
-            path_list.append("- ['%s', '%s']" %
-                             (file, file[:-3].replace("-", " ")))
-    if not path_list:
-        print(("ERROR: No markdown files found in %s ! " % MKDOCS_DIR) +
-              "Check if repository has been set up correctly.")
-        return False
-
-    pages_str = "pages:\n" + "\n".join(path_list) + "\n"
-
-    # Replace the pages data, strategically located at the end of the file
     mkdocs_yml = os.path.join(MKDOCS_DIR, "mkdocs.yml")
+
+    cfg = dict(
+        site_name=WIKI_NAME,
+        docs_dir=WIKI_NAME,
+        site_dir=OUT_DIR
+    )
+
+    with open(mkdocs_yml, 'w') as outfile:
+        yaml.dump(cfg, outfile, default_flow_style=False)
+
     if not os.path.exists(mkdocs_yml):
         print("ERROR: The MkDocs config file %s does not exist !" % mkdocs_yml)
         return False
@@ -149,7 +145,7 @@ def create_index():
         "</html>\n"
 
     print("Creating the index.html file...\n")
-    generated_site_dir = os.path.join(MKDOCS_DIR, "site")
+    generated_site_dir = OUT_DIR
     if not os.path.exists(generated_site_dir):
         try:
             os.makedirs(generated_site_dir)
