@@ -76,7 +76,13 @@ def pull_wiki_repo():
         raise Error("Wiki repo directory is not correct: %s" %
                     wiki_folder)
 
-    # Ensure the subfolder selected is the correct repository
+    ensure_correct_repository(wiki_folder)
+
+    # Git Fetch prints progress in stderr, so cannot check for erros that way
+    subprocess.call(["git", "pull", "origin", "master"])
+
+
+def ensure_correct_repository(wiki_folder):
     pipe = subprocess.PIPE
     git_process = subprocess.Popen(
         ["git", "config", "--get", "remote.origin.url"],
@@ -91,9 +97,6 @@ def pull_wiki_repo():
         raise Error(("ERROR: Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
                     "not found in directory %s url:\n\t%s\n" %
                     (wiki_folder, std_op))
-
-    # Git Fetch prints progress in stderr, so cannot check for erros that way
-    subprocess.call(["git", "pull", "origin", "master"])
 
 
 def edit_mkdocs_config():
