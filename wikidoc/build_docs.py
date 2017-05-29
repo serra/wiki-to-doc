@@ -194,26 +194,6 @@ def build_mkdocs():
     else:
         print(std_op)
 
-    # Remove root Documentation folder and copy the new site files into it
-    generated_site_dir = os.path.join(MKDOCS_DIR, "site")
-    root_documentation_dir = os.path.join(
-        os.path.dirname(WORKING_DIR), "documentation")
-    print("Copy folder %s into %s ...\n" %
-          (generated_site_dir, root_documentation_dir))
-
-    if os.path.exists(root_documentation_dir):
-        try:
-            shutil.rmtree(root_documentation_dir)
-        except shutil.Error:
-            print("ERROR: Could not remove root documentation folder !")
-            return False
-    try:
-        shutil.move(generated_site_dir, root_documentation_dir)
-    except shutil.Error:
-        print("ERROR: Could move new documentation files from " +
-              "%s to %s !" % (generated_site_dir, root_documentation_dir))
-        return False
-
     return True
 
 
