@@ -28,7 +28,6 @@
 from __future__ import unicode_literals, absolute_import
 import os
 import sys
-import shutil
 import subprocess
 import yaml
 
@@ -56,22 +55,26 @@ DEFAULT_INDEX = 'Home'
 OUT_DIR = os.path.join(WORKING_DIR, 'sites', WIKI_NAME)
 
 
+class Error(Exception):
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
+
 def pull_wiki_repo():
     """
     Pulls latest changes from the wiki repo.
-    :return: Boolean indicating if the operation was successful.
     """
     # Set working directory to the wiki repository
     wiki_folder = os.path.join(MKDOCS_DIR, WIKI_NAME)
     if os.path.isdir(wiki_folder):
         os.chdir(wiki_folder)
     else:
-        print("ERROR: Wiki repo directory is not correct: %s" % wiki_folder)
-        return False
-
-    # Ensure the submodule is initialised, progress is printed to stderr so just
-    # call subprocess with all data sent to console and error check later
-    subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
+        raise Error("Wiki repo directory is not correct: %s" %
+                    wiki_folder)
 
     # Ensure the subfolder selected is the correct repository
     pipe = subprocess.PIPE
@@ -81,21 +84,16 @@ def pull_wiki_repo():
     std_op, std_err_op = git_process.communicate()
 
     if std_err_op:
-        print("ERROR: Could not get the remote information from the wiki "
-              "repository !\n%s" + std_err_op)
-        return False
+        raise Error("Could not get the remote information from the wiki "
+                    "repository !\n%s" + std_err_op)
 
-    if not GITHUB_WIKI_REPO in std_op:
-        print(("ERROR: Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
-              "not found in directory %s url:\n\t%s\n" % (wiki_folder, std_op))
-        return False
+    if GITHUB_WIKI_REPO not in std_op:
+        raise Error(("ERROR: Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
+                    "not found in directory %s url:\n\t%s\n" %
+                    (wiki_folder, std_op))
 
     # Git Fetch prints progress in stderr, so cannot check for erros that way
-    print("\nPull from Wiki repository...")
     subprocess.call(["git", "pull", "origin", "master"])
-    print("")
-
-    return True
 
 
 def edit_mkdocs_config():
