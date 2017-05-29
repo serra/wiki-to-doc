@@ -184,7 +184,7 @@ def build_mkdocs():
     # Building the MkDocs project
     pipe = subprocess.PIPE
     mkdocs_process = subprocess.Popen(
-        ["mkdocs", "build"], stdout=pipe, stderr=pipe)
+        ["mkdocs", "build", "-q"], stdout=pipe, stderr=pipe)
     std_op, std_err_op = mkdocs_process.communicate()
 
     if std_err_op:
