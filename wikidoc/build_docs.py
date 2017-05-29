@@ -116,7 +116,6 @@ def edit_mkdocs_config():
 def create_index():
     """
     Creates an HTML index page to redirect to an MkDocs generated page.
-    :return: Boolean indicating the success of the operation.
     """
     html_code = \
         "<!DOCTYPE HTML>\n " \
@@ -139,21 +138,11 @@ def create_index():
     print("Creating the index.html file...\n")
     generated_site_dir = OUT_DIR
     if not os.path.exists(generated_site_dir):
-        try:
-            os.makedirs(generated_site_dir)
-        except IOError:
-            print("ERROR: Could not create site folder in %s !\n" %
-                  generated_site_dir)
-            return False
-    try:
-        index_file = open(os.path.join(generated_site_dir, "index.html"), "w")
-        index_file.write(html_code)
-        index_file.close()
-        return True
-    except IOError:
-        print("ERROR: Could not create index.html file in %s !\n" %
-              generated_site_dir)
-        return False
+        os.makedirs(generated_site_dir)
+
+    index_file = open(os.path.join(generated_site_dir, "index.html"), "w")
+    index_file.write(html_code)
+    index_file.close()
 
 
 def build_mkdocs():
