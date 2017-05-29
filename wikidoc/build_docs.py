@@ -149,14 +149,9 @@ def build_mkdocs():
     """
     Invokes MkDocs to build the static documentation and moves the folder
     into the project root folder.
-    :return: Boolean indicating the success of the operation.
     """
     # Setting the working directory
-    if os.path.isdir(MKDOCS_DIR):
-        os.chdir(MKDOCS_DIR)
-    else:
-        print("ERROR: MkDocs directory is not correct: %s" % MKDOCS_DIR)
-        return False
+    os.chdir(MKDOCS_DIR)
 
     # Building the MkDocs project
     pipe = subprocess.PIPE
@@ -165,13 +160,10 @@ def build_mkdocs():
     std_op, std_err_op = mkdocs_process.communicate()
 
     if std_err_op:
-        print("ERROR: Could not build MkDocs !\n%s" %
-              std_err_op)
-        return False
-    else:
-        print(std_op)
+        raise Error("ERROR: Could not build MkDocs !\n%s" %
+                    std_err_op)
 
-    return True
+    print(std_op)
 
 
 def build_docs():
