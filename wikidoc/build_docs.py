@@ -112,12 +112,6 @@ def edit_mkdocs_config():
     with open(mkdocs_yml, 'w') as outfile:
         yaml.dump(cfg, outfile, default_flow_style=False)
 
-    if not os.path.exists(mkdocs_yml):
-        print("ERROR: The MkDocs config file %s does not exist !" % mkdocs_yml)
-        return False
-
-    return True
-
 
 def create_index():
     """
