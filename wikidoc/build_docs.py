@@ -135,7 +135,6 @@ def create_index():
         "\t</body>\n" \
         "</html>\n"
 
-    print("Creating the index.html file...\n")
     generated_site_dir = OUT_DIR
     if not os.path.exists(generated_site_dir):
         os.makedirs(generated_site_dir)
@@ -168,24 +167,12 @@ def build_mkdocs():
 
 def build_docs():
     """ Builds the documentation HTML pages from the Wiki repository. """
-    success = pull_wiki_repo()
-    if success is False:
-        sys.exit(1)
-
-    success = edit_mkdocs_config()
-    if success is False:
-        sys.exit(1)
-
+    pull_wiki_repo()
+    edit_mkdocs_config()
     # Create index.html before the MkDocs site is created in case the project
     # already contains an index file.
-    success = create_index()
-    if success is False:
-        sys.exit(1)
-
-    success = build_mkdocs()
-    if success is False:
-        sys.exit(1)
-    print("Build process finished!")
+    create_index()
+    build_mkdocs()
 
 
 if __name__ == "__main__":
