@@ -105,6 +105,7 @@ def edit_mkdocs_config():
 
     cfg = dict(
         site_name=WIKI_NAME,
+        theme='readthedocs',
         docs_dir=WIKI_NAME,
         site_dir=OUT_DIR
     )
