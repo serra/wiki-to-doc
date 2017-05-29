@@ -15,8 +15,12 @@ class OwnWikiToDocTestSuite(unittest.TestCase):
     def test_write_pdf(self):
         shutil.rmtree(_out_dir, ignore_errors=True)
         build_docs.build_docs()
-        index_file = os.path.join(_out_dir, 'index.html')
-        assert os.path.exists(index_file)
+        self.assert_exists('index.html')
+        self.assert_exists('Home')
+
+    def assert_exists(self, rel_path):
+        p = os.path.join(_out_dir, rel_path)
+        assert os.path.exists(p)
 
 
 if __name__ == '__main__':
