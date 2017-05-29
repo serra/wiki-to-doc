@@ -39,15 +39,17 @@ except ImportError:
     print("You need to have mkdocs installed !")
     sys.exit(1)
 
+from os.path import expanduser
+home = expanduser("~")
 
 # Path data
-GITHUB_USER = "carlosperate"
-WIKI_NAME = "ardublockly.wiki"
+GITHUB_USER = "serra"
+WIKI_NAME = "wiki-to-doc.wiki"
 GITHUB_WIKI_REPO = "github.com/%s/%s.git" % (GITHUB_USER, WIKI_NAME)
 
-MKDOCS_FOLDER = "ardublocklydocs"
-THIS_FILE_DIR = os.path.dirname(os.path.realpath(__file__))
-MKDOCS_DIR = os.path.join(THIS_FILE_DIR, MKDOCS_FOLDER)
+MKDOCS_FOLDER = "mkdocs"
+WORKING_DIR = os.path.join(home, "wiki-to-doc")
+MKDOCS_DIR = os.path.join(WORKING_DIR, MKDOCS_FOLDER)
 
 DEFAULT_INDEX = 'Home'
 
@@ -224,7 +226,7 @@ def build_mkdocs():
     # Remove root Documentation folder and copy the new site files into it
     generated_site_dir = os.path.join(MKDOCS_DIR, "site")
     root_documentation_dir = os.path.join(
-        os.path.dirname(THIS_FILE_DIR), "documentation")
+        os.path.dirname(WORKING_DIR), "documentation")
     print("Copy folder %s into %s ...\n" %
           (generated_site_dir, root_documentation_dir))
 
