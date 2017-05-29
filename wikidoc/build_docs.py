@@ -122,35 +122,6 @@ def edit_mkdocs_config():
         print("ERROR: The MkDocs config file %s does not exist !" % mkdocs_yml)
         return False
 
-    # Copy config file until the pages line, strategically located at the end
-    temp_file_handler, temp_abs_path = mkstemp()
-    with open(temp_abs_path, 'w') as temp_file:
-        with open(mkdocs_yml) as original_file:
-            for line in original_file:
-                if not "pages:" in line:
-                    temp_file.write(line)
-                else:
-                    print("Replacing 'pages' property found in mkdocs.yml ...")
-                    break
-            else:
-                print("Did not find the 'pages' property in mkdocs.yml.\n" +
-                      "Attaching the property at the end of the file.")
-            temp_file.write(pages_str)
-            print(pages_str)
-
-    # Remove original file and move the new temp to replace it
-    os.close(temp_file_handler)
-    try:
-        os.remove(mkdocs_yml)
-    except IOError:
-        print("ERROR: Could not delete original config file %s !" % mkdocs_yml)
-        return False
-    try:
-        shutil.move(temp_abs_path, mkdocs_yml)
-    except shutil.Error:
-        print("ERROR: Could move new config file to %s !" % mkdocs_yml)
-        return False
-
     return True
 
 
