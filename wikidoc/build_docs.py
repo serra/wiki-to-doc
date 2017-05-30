@@ -59,13 +59,10 @@ class Error(Exception):
 
 class DocBuilder(object):
 
-    def __init__(self):
+    def __init__(self, github_wiki_repo, wiki_name):
         # Path data
-        self._github_user = "serra"
-        self._wiki_name = "wiki-to-doc.wiki"
-        self._github_wiki_repo = "https://github.com/%s/%s.git" % (
-            self._github_user, self._wiki_name)
-
+        self._wiki_name = wiki_name
+        self._github_wiki_repo = github_wiki_repo
         self._out_dir = os.path.join(WORKING_DIR, 'sites', self._wiki_name)
 
     def pull_wiki_repo(self):
@@ -144,13 +141,11 @@ class DocBuilder(object):
             "\t</body>\n" \
             "</html>\n"
 
-        generated_site_dir = self._out_dir
-        if not os.path.exists(generated_site_dir):
-            os.makedirs(generated_site_dir)
+        file_name = os.path.join(self._out_dir, "index.html")
 
-        index_file = open(os.path.join(generated_site_dir, "index.html"), "w")
-        index_file.write(html_code)
-        index_file.close()
+        if not os.path.exists(file_name):
+            with open(file_name, "w") as index_file:
+                index_file.write(html_code)
 
     def build_mkdocs(self):
         """
@@ -167,7 +162,7 @@ class DocBuilder(object):
         std_op, std_err_op = mkdocs_process.communicate()
 
         if std_err_op:
-            raise Error("ERROR: Could not build MkDocs !\n%s" %
+            raise Error("Could not build MkDocs !\n%s" %
                         std_err_op)
 
         print(std_op)
@@ -176,14 +171,14 @@ class DocBuilder(object):
         """ Builds the documentation HTML pages from the Wiki repository. """
         self.pull_wiki_repo()
         self.edit_mkdocs_config()
-        # Create index.html before the MkDocs site is created in case the
-        # project already contains an index file.
-        self.create_index()
         self.build_mkdocs()
+        self.create_index()
 
 
-def build_docs():
-    b = DocBuilder()
+def build_docs(
+        github_wiki_repo="https://github.com/serra/wiki-to-doc.wiki.git",
+        wiki_name="wiki-to-doc.wiki"):
+    b = DocBuilder(github_wiki_repo, wiki_name)
     b.build_docs()
 
 
