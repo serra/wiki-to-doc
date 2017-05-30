@@ -44,7 +44,7 @@ home = expanduser("~")
 # Path data
 GITHUB_USER = "serra"
 WIKI_NAME = "wiki-to-doc.wiki"
-GITHUB_WIKI_REPO = "github.com/%s/%s.git" % (GITHUB_USER, WIKI_NAME)
+GITHUB_WIKI_REPO = "https://github.com/%s/%s.git" % (GITHUB_USER, WIKI_NAME)
 
 MKDOCS_FOLDER = "mkdocs"
 WORKING_DIR = os.path.join(home, "wiki-to-doc")
@@ -73,13 +73,17 @@ def pull_wiki_repo():
     if os.path.isdir(wiki_folder):
         os.chdir(wiki_folder)
     else:
-        raise Error("Wiki repo directory is not correct: %s" %
-                    wiki_folder)
+        clone_repo(wiki_folder)
+        os.chdir(wiki_folder)
 
     ensure_correct_repository(wiki_folder)
 
     # Git Fetch prints progress in stderr, so cannot check for erros that way
     subprocess.call(["git", "pull", "origin", "master"])
+
+
+def clone_repo(wiki_folder):
+    subprocess.call(["git", "clone", GITHUB_WIKI_REPO, wiki_folder])
 
 
 def ensure_correct_repository(wiki_folder):
