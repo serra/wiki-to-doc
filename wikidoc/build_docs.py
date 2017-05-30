@@ -41,18 +41,11 @@ except ImportError:
 from os.path import expanduser
 home = expanduser("~")
 
-# Path data
-GITHUB_USER = "serra"
-WIKI_NAME = "wiki-to-doc.wiki"
-GITHUB_WIKI_REPO = "https://github.com/%s/%s.git" % (GITHUB_USER, WIKI_NAME)
-
 MKDOCS_FOLDER = "mkdocs"
 WORKING_DIR = os.path.join(home, "wiki-to-doc")
 MKDOCS_DIR = os.path.join(WORKING_DIR, MKDOCS_FOLDER)
 
 DEFAULT_INDEX = 'Home'
-
-OUT_DIR = os.path.join(WORKING_DIR, 'sites', WIKI_NAME)
 
 
 class Error(Exception):
@@ -66,12 +59,21 @@ class Error(Exception):
 
 class DocBuilder(object):
 
+    def __init__(self):
+        # Path data
+        self._github_user = "serra"
+        self._wiki_name = "wiki-to-doc.wiki"
+        self._github_wiki_repo = "https://github.com/%s/%s.git" % (
+            self._github_user, self._wiki_name)
+
+        self._out_dir = os.path.join(WORKING_DIR, 'sites', self._wiki_name)
+
     def pull_wiki_repo(self):
         """
         Pulls latest changes from the wiki repo.
         """
         # Set working directory to the wiki repository
-        wiki_folder = os.path.join(MKDOCS_DIR, WIKI_NAME)
+        wiki_folder = os.path.join(MKDOCS_DIR, self._wiki_name)
         if os.path.isdir(wiki_folder):
             os.chdir(wiki_folder)
         else:
@@ -85,7 +87,7 @@ class DocBuilder(object):
         subprocess.call(["git", "pull", "origin", "master"])
 
     def clone_repo(self, wiki_folder):
-        subprocess.call(["git", "clone", GITHUB_WIKI_REPO, wiki_folder])
+        subprocess.call(["git", "clone", self._github_wiki_repo, wiki_folder])
 
     def ensure_correct_repository(self, wiki_folder):
         pipe = subprocess.PIPE
@@ -98,8 +100,8 @@ class DocBuilder(object):
             raise Error("Could not get the remote information from the wiki "
                         "repository !\n%s" + std_err_op)
 
-        if GITHUB_WIKI_REPO not in std_op:
-            raise Error(("Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
+        if self._github_wiki_repo not in std_op:
+            raise Error(("Wiki repository:\n\t%s\n" % self._github_wiki_repo) +
                         "not found in directory %s url:\n\t%s\n" %
                         (wiki_folder, std_op))
 
@@ -111,10 +113,10 @@ class DocBuilder(object):
         mkdocs_yml = os.path.join(MKDOCS_DIR, "mkdocs.yml")
 
         cfg = dict(
-            site_name=WIKI_NAME,
+            site_name=self._wiki_name,
             theme='readthedocs',
-            docs_dir=WIKI_NAME,
-            site_dir=OUT_DIR
+            docs_dir=self._wiki_name,
+            site_dir=self._out_dir
         )
 
         with open(mkdocs_yml, 'w') as outfile:
@@ -142,7 +144,7 @@ class DocBuilder(object):
             "\t</body>\n" \
             "</html>\n"
 
-        generated_site_dir = OUT_DIR
+        generated_site_dir = self._out_dir
         if not os.path.exists(generated_site_dir):
             os.makedirs(generated_site_dir)
 

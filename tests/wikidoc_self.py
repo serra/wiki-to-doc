@@ -6,7 +6,8 @@ import unittest
 import shutil
 import os
 
-_out_dir = build_docs.OUT_DIR
+_out_dir = os.path.join(build_docs.WORKING_DIR, 'sites',
+                        'wiki-to-doc.wiki')
 
 
 class OwnWikiToDocTestSuite(unittest.TestCase):
