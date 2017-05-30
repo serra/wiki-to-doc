@@ -59,11 +59,13 @@ class Error(Exception):
 
 class DocBuilder(object):
 
-    def __init__(self, github_wiki_repo, wiki_name):
+    def __init__(self, github_wiki_repo, wiki_name,
+                 index=DEFAULT_INDEX):
         # Path data
         self._wiki_name = wiki_name
         self._github_wiki_repo = github_wiki_repo
         self._out_dir = os.path.join(WORKING_DIR, 'sites', self._wiki_name)
+        self._index = index
 
     def pull_wiki_repo(self):
         """
@@ -129,15 +131,15 @@ class DocBuilder(object):
             "\t<head>\n" \
             "\t\t<meta charset=\"UTF-8\">\n" \
             "\t\t<meta http-equiv=\"refresh\" content=\"1;url=%s/index.html\">\n" \
-            % DEFAULT_INDEX + \
+            % self._index + \
             "\t\t<script type=\"text/javascript\">\n" \
-            "\t\t\twindow.location.href = \"%s/index.html\"\n" % DEFAULT_INDEX +\
+            "\t\t\twindow.location.href = \"%s/index.html\"\n" % self._index +\
             "\t\t</script>\n" \
             "\t</head>\n" \
             "\t<body>\n" \
             "\t\tIf you are not redirected automatically to the " \
             "%s page, follow this <a href=\"%s/index.html\">link</a>\n"\
-            % (DEFAULT_INDEX, DEFAULT_INDEX) + \
+            % (self._index, self._index) + \
             "\t</body>\n" \
             "</html>\n"
 
@@ -177,8 +179,9 @@ class DocBuilder(object):
 
 def build_docs(
         github_wiki_repo="https://github.com/serra/wiki-to-doc.wiki.git",
-        wiki_name="wiki-to-doc.wiki"):
-    b = DocBuilder(github_wiki_repo, wiki_name)
+        wiki_name="wiki-to-doc.wiki",
+        index=DEFAULT_INDEX):
+    b = DocBuilder(github_wiki_repo, wiki_name, index)
     b.build_docs()
 
 
