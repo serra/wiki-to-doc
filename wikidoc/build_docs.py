@@ -64,123 +64,125 @@ class Error(Exception):
         return repr(self.value)
 
 
-def pull_wiki_repo():
-    """
-    Pulls latest changes from the wiki repo.
-    """
-    # Set working directory to the wiki repository
-    wiki_folder = os.path.join(MKDOCS_DIR, WIKI_NAME)
-    if os.path.isdir(wiki_folder):
-        os.chdir(wiki_folder)
-    else:
-        clone_repo(wiki_folder)
-        os.chdir(wiki_folder)
+class DocBuilder(object):
 
-    ensure_correct_repository(wiki_folder)
+    def pull_wiki_repo(self):
+        """
+        Pulls latest changes from the wiki repo.
+        """
+        # Set working directory to the wiki repository
+        wiki_folder = os.path.join(MKDOCS_DIR, WIKI_NAME)
+        if os.path.isdir(wiki_folder):
+            os.chdir(wiki_folder)
+        else:
+            self.clone_repo(wiki_folder)
+            os.chdir(wiki_folder)
 
-    # Git Fetch prints progress in stderr, so cannot check for erros that way
-    subprocess.call(["git", "pull", "origin", "master"])
+        self.ensure_correct_repository(wiki_folder)
 
+        # Git Fetch prints progress in stderr, so cannot check for erros that
+        # way
+        subprocess.call(["git", "pull", "origin", "master"])
 
-def clone_repo(wiki_folder):
-    subprocess.call(["git", "clone", GITHUB_WIKI_REPO, wiki_folder])
+    def clone_repo(self, wiki_folder):
+        subprocess.call(["git", "clone", GITHUB_WIKI_REPO, wiki_folder])
 
+    def ensure_correct_repository(self, wiki_folder):
+        pipe = subprocess.PIPE
+        git_process = subprocess.Popen(
+            ["git", "config", "--get", "remote.origin.url"],
+            stdout=pipe, stderr=pipe)
+        std_op, std_err_op = git_process.communicate()
 
-def ensure_correct_repository(wiki_folder):
-    pipe = subprocess.PIPE
-    git_process = subprocess.Popen(
-        ["git", "config", "--get", "remote.origin.url"],
-        stdout=pipe, stderr=pipe)
-    std_op, std_err_op = git_process.communicate()
+        if std_err_op:
+            raise Error("Could not get the remote information from the wiki "
+                        "repository !\n%s" + std_err_op)
 
-    if std_err_op:
-        raise Error("Could not get the remote information from the wiki "
-                    "repository !\n%s" + std_err_op)
+        if GITHUB_WIKI_REPO not in std_op:
+            raise Error(("Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
+                        "not found in directory %s url:\n\t%s\n" %
+                        (wiki_folder, std_op))
 
-    if GITHUB_WIKI_REPO not in std_op:
-        raise Error(("ERROR: Wiki repository:\n\t%s\n" % GITHUB_WIKI_REPO) +
-                    "not found in directory %s url:\n\t%s\n" %
-                    (wiki_folder, std_op))
+    def edit_mkdocs_config(self):
+        """
+        Create mkdocs.yml file from metadata
+        :return: Boolean indicating the success of the operation.
+        """
+        mkdocs_yml = os.path.join(MKDOCS_DIR, "mkdocs.yml")
 
+        cfg = dict(
+            site_name=WIKI_NAME,
+            theme='readthedocs',
+            docs_dir=WIKI_NAME,
+            site_dir=OUT_DIR
+        )
 
-def edit_mkdocs_config():
-    """
-    Create mkdocs.yml file from metadata
-    :return: Boolean indicating the success of the operation.
-    """
-    mkdocs_yml = os.path.join(MKDOCS_DIR, "mkdocs.yml")
+        with open(mkdocs_yml, 'w') as outfile:
+            yaml.dump(cfg, outfile, default_flow_style=False)
 
-    cfg = dict(
-        site_name=WIKI_NAME,
-        theme='readthedocs',
-        docs_dir=WIKI_NAME,
-        site_dir=OUT_DIR
-    )
+    def create_index(self):
+        """
+        Creates an HTML index page to redirect to an MkDocs generated page.
+        """
+        html_code = \
+            "<!DOCTYPE HTML>\n " \
+            "<html>\n" \
+            "\t<head>\n" \
+            "\t\t<meta charset=\"UTF-8\">\n" \
+            "\t\t<meta http-equiv=\"refresh\" content=\"1;url=%s/index.html\">\n" \
+            % DEFAULT_INDEX + \
+            "\t\t<script type=\"text/javascript\">\n" \
+            "\t\t\twindow.location.href = \"%s/index.html\"\n" % DEFAULT_INDEX +\
+            "\t\t</script>\n" \
+            "\t</head>\n" \
+            "\t<body>\n" \
+            "\t\tIf you are not redirected automatically to the " \
+            "%s page, follow this <a href=\"%s/index.html\">link</a>\n"\
+            % (DEFAULT_INDEX, DEFAULT_INDEX) + \
+            "\t</body>\n" \
+            "</html>\n"
 
-    with open(mkdocs_yml, 'w') as outfile:
-        yaml.dump(cfg, outfile, default_flow_style=False)
+        generated_site_dir = OUT_DIR
+        if not os.path.exists(generated_site_dir):
+            os.makedirs(generated_site_dir)
 
+        index_file = open(os.path.join(generated_site_dir, "index.html"), "w")
+        index_file.write(html_code)
+        index_file.close()
 
-def create_index():
-    """
-    Creates an HTML index page to redirect to an MkDocs generated page.
-    """
-    html_code = \
-        "<!DOCTYPE HTML>\n " \
-        "<html>\n" \
-        "\t<head>\n" \
-        "\t\t<meta charset=\"UTF-8\">\n" \
-        "\t\t<meta http-equiv=\"refresh\" content=\"1;url=%s/index.html\">\n" \
-        % DEFAULT_INDEX + \
-        "\t\t<script type=\"text/javascript\">\n" \
-        "\t\t\twindow.location.href = \"%s/index.html\"\n" % DEFAULT_INDEX +\
-        "\t\t</script>\n" \
-        "\t</head>\n" \
-        "\t<body>\n" \
-        "\t\tIf you are not redirected automatically to the " \
-        "%s page, follow this <a href=\"%s/index.html\">link</a>\n"\
-        % (DEFAULT_INDEX, DEFAULT_INDEX) + \
-        "\t</body>\n" \
-        "</html>\n"
+    def build_mkdocs(self):
+        """
+        Invokes MkDocs to build the static documentation and moves the folder
+        into the project root folder.
+        """
+        # Setting the working directory
+        os.chdir(MKDOCS_DIR)
 
-    generated_site_dir = OUT_DIR
-    if not os.path.exists(generated_site_dir):
-        os.makedirs(generated_site_dir)
+        # Building the MkDocs project
+        pipe = subprocess.PIPE
+        mkdocs_process = subprocess.Popen(
+            ["mkdocs", "build", "-q"], stdout=pipe, stderr=pipe)
+        std_op, std_err_op = mkdocs_process.communicate()
 
-    index_file = open(os.path.join(generated_site_dir, "index.html"), "w")
-    index_file.write(html_code)
-    index_file.close()
+        if std_err_op:
+            raise Error("ERROR: Could not build MkDocs !\n%s" %
+                        std_err_op)
 
+        print(std_op)
 
-def build_mkdocs():
-    """
-    Invokes MkDocs to build the static documentation and moves the folder
-    into the project root folder.
-    """
-    # Setting the working directory
-    os.chdir(MKDOCS_DIR)
-
-    # Building the MkDocs project
-    pipe = subprocess.PIPE
-    mkdocs_process = subprocess.Popen(
-        ["mkdocs", "build", "-q"], stdout=pipe, stderr=pipe)
-    std_op, std_err_op = mkdocs_process.communicate()
-
-    if std_err_op:
-        raise Error("ERROR: Could not build MkDocs !\n%s" %
-                    std_err_op)
-
-    print(std_op)
+    def build_docs(self):
+        """ Builds the documentation HTML pages from the Wiki repository. """
+        self.pull_wiki_repo()
+        self.edit_mkdocs_config()
+        # Create index.html before the MkDocs site is created in case the
+        # project already contains an index file.
+        self.create_index()
+        self.build_mkdocs()
 
 
 def build_docs():
-    """ Builds the documentation HTML pages from the Wiki repository. """
-    pull_wiki_repo()
-    edit_mkdocs_config()
-    # Create index.html before the MkDocs site is created in case the project
-    # already contains an index file.
-    create_index()
-    build_mkdocs()
+    b = DocBuilder()
+    b.build_docs()
 
 
 if __name__ == "__main__":
