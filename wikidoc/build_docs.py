@@ -99,7 +99,7 @@ class DocBuilder(object):
             raise Error("Could not get the remote information from the wiki "
                         "repository !\n%s" + std_err_op)
 
-        if self._github_wiki_repo not in std_op:
+        if self._github_wiki_repo not in str(std_op):
             raise Error(("Wiki repository:\n\t%s\n" % self._github_wiki_repo) +
                         "not found in directory %s url:\n\t%s\n" %
                         (wiki_folder, std_op))

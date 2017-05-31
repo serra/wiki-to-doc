@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import context
 from helpers import WikiToDocTestBase
-import unittest
 
+import unittest
 
 class OtherWikisToDocTestSuite(WikiToDocTestBase):
 
