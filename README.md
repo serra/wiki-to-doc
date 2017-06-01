@@ -4,6 +4,8 @@ Simple approach to create an offline, distributable copy of a github wiki.
 
 See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
+[![Build Status](https://travis-ci.org/serra/wiki-to-doc.svg?branch=master)](https://travis-ci.org/serra/wiki-to-doc)
+
 ## Developing
 
 Developed using Python 3.4.
