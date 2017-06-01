@@ -8,7 +8,7 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
 ## Developing
 
-Developed using Python 3.4.
+Developed using Python3; tested with Python 2.7, 3.4 and 3.6.
 
 Assuming virtualenv 1.7+:
 

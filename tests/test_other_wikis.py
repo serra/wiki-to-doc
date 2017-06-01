@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import context
 from helpers import WikiToDocTestBase
+from pytest import mark
 
 import unittest
 
+
+@mark.slow
 class OtherWikisToDocTestSuite(WikiToDocTestBase):
 
     def test_nlog_wikidoc(self):
