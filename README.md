@@ -26,6 +26,13 @@ cd [wiki-to-doc repo]
 pytest
 ```
 
+I like to run sniffer, so that tests are automatically run when files change:
+```
+cd [wiki-to-doc repo]
+sniffer
+```
+
+
 ## Installing
 
 
