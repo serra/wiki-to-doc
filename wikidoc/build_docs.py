@@ -168,6 +168,7 @@ class DocBuilder(object):
                         std_err_op)
 
 
+
     def build_docs(self):
         """ Builds the documentation HTML pages from the Wiki repository. """
         self.pull_wiki_repo()
