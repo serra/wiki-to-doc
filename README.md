@@ -10,7 +10,7 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
 Developed using Python 3.4.
 
-Assuming virtualenve 1.7+:
+Assuming virtualenv 1.7+:
 
 ```
 cd [wiki-to-doc repo]
@@ -19,6 +19,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Run tests:
+
+```
+cd [wiki-to-doc repo]
+pytest
+```
 
 ## Installing
 
