@@ -16,7 +16,7 @@ Assuming virtualenv 1.7+:
 
 ```
 cd [wiki-to-doc repo]
-virtualenv -p /usr/bin/python3.4 venv
+virtualenv -p /usr/bin/python3.6 venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -83,6 +83,16 @@ python setup.py sdist upload -r pypi
 
 ## Installing
 
+```
+pip install wikidoc
+wikidoc --help
+```
+
 
 ## Usage
+
+```
+pip install wikidoc
+wikidoc --help
+```
 
