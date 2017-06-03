@@ -10,6 +10,8 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
 Developed using Python3; tested with Python 2.7, 3.4 and 3.6.
 
+### Prepare environment
+
 Assuming virtualenv 1.7+:
 
 ```
@@ -19,7 +21,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Run tests:
+### Run tests
 
 ```
 cd [wiki-to-doc repo]
@@ -32,6 +34,28 @@ cd [wiki-to-doc repo]
 sniffer
 ```
 
+### Developing & hacking
+
+Package using pip and setuptools. During development:
+
+```
+$ . venv/bin/activate
+$ pip install --editable .
+
+```
+
+This gives you the virtual environment from above,
+with the wikidoc package installed and editable.
+So you can experiment with ths cli script from the terminal immediately 
+while developing.
+
+### Pacakiging
+
+To do.
+
+### Publishing
+
+To do.
 
 ## Installing
 
