@@ -1,6 +1,6 @@
 # wiki-to-doc
 
-Simple approach to create an offline, distributable copy of a github wiki.
+Simple approach to create an offline, static copy of a github wiki.
 
 See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
@@ -29,6 +29,7 @@ pytest
 ```
 
 I like to run sniffer, so that tests are automatically run when files change:
+
 ```
 cd [wiki-to-doc repo]
 sniffer
@@ -46,16 +47,39 @@ $ pip install --editable .
 
 This gives you the virtual environment from above,
 with the wikidoc package installed and editable.
-So you can experiment with ths cli script from the terminal immediately 
-while developing.
+This way you can experiment with the cli script from the terminal 
+immediately while developing.
 
-### Pacakiging
+### Packaging
 
-To do.
+To Do.
+
 
 ### Publishing
 
-To do.
+Test if you can package and upload to pypitest:
+
+```
+python setup.py register -r pypitest
+```
+
+Actually upload it:
+
+```
+python setup.py sdist upload -r pypitest
+```
+
+We can do the same for PyPi:
+
+```
+python setup.py register -r pypi
+```
+
+And:
+
+```
+python setup.py sdist upload -r pypi
+```
 
 ## Installing
 
