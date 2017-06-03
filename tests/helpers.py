@@ -13,7 +13,7 @@ class WikiToDocTestBase(unittest.TestCase):
         out_dir = os.path.join(build_docs.WORKING_DIR, 'sites',
                                name, index)
         shutil.rmtree(out_dir, ignore_errors=True)
-        build_docs.build_docs(repo, name, index)
+        build_docs.build(repo, name, index)
 
     def assert_exists(self, out_dir, rel_path):
         p = os.path.join(out_dir, rel_path)

@@ -175,13 +175,9 @@ class DocBuilder(object):
         self.create_index()
 
 
-def build_docs(
+def build(
         github_wiki_repo="https://github.com/serra/wiki-to-doc.wiki.git",
         wiki_name="wiki-to-doc.wiki",
         index=DEFAULT_INDEX):
     b = DocBuilder(github_wiki_repo, wiki_name, index)
     b.build_docs()
-
-
-if __name__ == "__main__":
-    build_docs()

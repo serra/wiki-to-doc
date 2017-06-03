@@ -1,4 +1,5 @@
 import click
+from wikidoc import build_docs
 
 __version__ = '0.1.0'
 
@@ -9,10 +10,15 @@ def cli():
     """
     wikidoc - Generate documentation from a Github wiki.
     """
-    click.echo('starting the cli ...')
 
 
 @cli.command(name="build")
-def build():
-    click.echo('building the wiki ... ')
-    click.echo('build done.')
+@click.option('--repo',
+              default="https://github.com/serra/wiki-to-doc.wiki.git")
+@click.option('--name',
+              default="wiki-to-doc.wiki")
+def build(repo, name):
+    """
+    Get the latest version of the wiki and build into an html website.
+    """
+    build_docs.build(repo, name)
