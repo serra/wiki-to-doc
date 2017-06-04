@@ -52,7 +52,35 @@ immediately while developing.
 
 ### Packaging
 
-To Do.
+Use bumpversion to, well, bump the version.
+This will update the version information in setup.cfg and other files.
+It will add a tag to the current commit too.
+
+When this tag is pushed and detected by our CI system, 
+the CI system will create a release and push it to PyPi.
+
+So:
+
+```
+
+
+```
+
+
+
+Do not: 
+
+ * set `__version__` in `__init__.py`
+ * import your module code from within `setup.py`
+
+See [here](https://stackoverflow.com/questions/2058802/how-can-i-get-the-version-defined-in-setup-py-setuptools-in-my-package) 
+and [here](https://stackoverflow.com/questions/458550/standard-way-to-embed-version-into-python-package) for details.
+
+Also interesting [PEP 396], [PEP 440] and the [bumpversion] script.
+
+ [PEP 396]: https://www.python.org/dev/peps/pep-0396/
+ [PEP 440]: https://www.python.org/dev/peps/pep-0440/
+ [bumpversion]: https://pypi.python.org/pypi/bumpversion
 
 
 ### Publishing
