@@ -1,7 +1,6 @@
 import click
 from wikidoc import build_docs
-
-__version__ = '0.1.0'
+from wikidoc._version import __version__
 
 
 @click.group(context_settings={'help_option_names': ['-h', '--help']})

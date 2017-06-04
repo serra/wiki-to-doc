@@ -52,8 +52,13 @@ immediately while developing.
 
 ### Packaging
 
-Use bumpversion to, well, bump the version.
-This will update the version information in setup.cfg and other files.
+Use `bumpversion` to, well, bump the version.
+This will update the version information in 
+
+ * setup.cfg
+ * setup.py
+ * wikidoc/_version.py
+
 It will add a tag to the current commit too.
 
 When this tag is pushed and detected by our CI system, 
