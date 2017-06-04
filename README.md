@@ -64,14 +64,17 @@ It will add a tag to the current commit too.
 When this tag is pushed and detected by our CI system, 
 the CI system will create a release and push it to PyPi.
 
-So:
+So to do a patch increment:
+
+```
+git checkout master
+git pull
+bumpversion patch
+git push origin master --tags
 
 ```
 
-
-```
-
-
+#### some notes on versioning ...
 
 Do not: 
 
