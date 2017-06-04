@@ -1,10 +1,15 @@
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.6"
-# command to install dependencies
+- '2.7'
+- '3.4'
+- '3.6'
 install:
-  - pip install -r requirements.txt
-# command to run tests
+- pip install -r requirements.txt
 script: pytest -m "not slow"
+deploy:
+  provider: pypi
+  user: serra-marijn
+  password:
+    secure: heNCeV7ShvoEyxWQ4yZbSdrinf7Y1t0HaeI/lKN2hkvuLmXYShwNxcaY9US0hNMmZKXoip2j+MWSLA5J3pnYnqZG8F9/+T7A5KTDiQohSt/J1VfZ/chdslYAPxFdRKFu9pFmaOoNcZX7v+43cGbl8bUMKWy+DF8QQ/g783DBvbCX6jlPwx0Kw8jxCXcfFTElQnaR+9ZbHSmPE2WQ2osAtmDan6iXkH0oLE6S2iN519o5SQQvEPtVQo8sCJjfzJbJyAk6UdlqxN6B1spTJAFS4PSW9GWSooYa+pdfMpDtligPfPIIs+xOKUqXa5hPmxaJAvj9+fbPhxqdrpoOqnWfFLC5gSqNDs9pdZKYsfQBhUPvqHSmStmS6Ewv45CMz6ZfHdxcrlmavJSWI30gwCy0T8aat2my4Wbc0Qnk8qBjToi6fjFIgTZgholuH4nshZXc999C6Y98ntDOZgk+IRrGX5HcQR7EhDyTowiwzz3SaawItN50mtp7Q2Jo8lYODsMKBUor0RB5dfFkkvvl1FnLIgsXQN9eZngDc6MXDjyNSIVhlNITUbrglDg1uQJH8xHWKiOIsOboSY0gsxmmKbYZKHPBt8zSpsqe31GSic/95ES+ayJNQetid6Q3owIX7GAffmSTi+HIrMUsaT3+lDRx/IisFBMf1pyt8MP3qMLsSa8=
+  on:
+    tags: true
