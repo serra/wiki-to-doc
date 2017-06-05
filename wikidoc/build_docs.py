@@ -30,6 +30,7 @@ import os
 import sys
 import subprocess
 import yaml
+from git import Repo
 
 # mkdocs used only in the command line, imported just to ensure it's installed
 try:
@@ -89,20 +90,11 @@ class DocBuilder(object):
         subprocess.call(["git", "clone", self._github_wiki_repo, wiki_folder])
 
     def ensure_correct_repository(self, wiki_folder):
-        pipe = subprocess.PIPE
-        git_process = subprocess.Popen(
-            ["git", "config", "--get", "remote.origin.url"],
-            stdout=pipe, stderr=pipe)
-        std_op, std_err_op = git_process.communicate()
-
-        if std_err_op:
-            raise Error("Could not get the remote information from the wiki "
-                        "repository !\n%s" + std_err_op)
-
-        if self._github_wiki_repo not in str(std_op):
+        repo = Repo(wiki_folder)
+        origin = repo.remotes.origin
+        if self._github_wiki_repo != origin.url:
             raise Error(("Wiki repository:\n\t%s\n" % self._github_wiki_repo) +
-                        "not found in directory %s url:\n\t%s\n" %
-                        (wiki_folder, std_op))
+                        "not found in directory %s" % wiki_folder)
 
     def edit_mkdocs_config(self):
         """
