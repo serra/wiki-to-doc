@@ -27,17 +27,10 @@
 #
 from __future__ import unicode_literals, absolute_import
 import os
-import sys
 import subprocess
 import yaml
 from git import Repo
-
-# mkdocs used only in the command line, imported just to ensure it's installed
-try:
-    import mkdocs
-except ImportError:
-    print("You need to have mkdocs installed !")
-    sys.exit(1)
+from .exceptions import Error
 
 from os.path import expanduser
 home = expanduser("~")
@@ -49,52 +42,50 @@ MKDOCS_DIR = os.path.join(WORKING_DIR, MKDOCS_FOLDER)
 DEFAULT_INDEX = 'Home'
 
 
-class Error(Exception):
-
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        return repr(self.value)
+# mkdocs used only in the command line, imported just to ensure it's installed
+try:
+    import mkdocs
+except ImportError:
+    raise Error("You need to have mkdocs installed !")
 
 
 class DocBuilder(object):
 
-    def __init__(self, github_wiki_repo, wiki_name,
+    def __init__(self, github_wiki_url, wiki_name,
                  index=DEFAULT_INDEX):
-        # Path data
         self._wiki_name = wiki_name
-        self._github_wiki_repo = github_wiki_repo
+        self._github_wiki_url = github_wiki_url
         self._out_dir = os.path.join(WORKING_DIR, 'sites', self._wiki_name)
         self._index = index
 
-    def pull_wiki_repo(self):
+    def init_wiki_repo(self):
         """
         Pulls latest changes from the wiki repo.
         """
-        # Set working directory to the wiki repository
-        wiki_folder = os.path.join(MKDOCS_DIR, self._wiki_name)
-        if os.path.isdir(wiki_folder):
-            os.chdir(wiki_folder)
-        else:
-            self.clone_repo(wiki_folder)
-            os.chdir(wiki_folder)
-
-        self.ensure_correct_repository(wiki_folder)
-
-        # Git Fetch prints progress in stderr, so cannot check for erros that
-        # way
-        subprocess.call(["git", "pull", "origin", "master"])
-
-    def clone_repo(self, wiki_folder):
-        subprocess.call(["git", "clone", self._github_wiki_repo, wiki_folder])
-
-    def ensure_correct_repository(self, wiki_folder):
-        repo = Repo(wiki_folder)
+        repo_dir = os.path.join(MKDOCS_DIR, self._wiki_name)
+        repo = self.init_repo(repo_dir)
         origin = repo.remotes.origin
-        if self._github_wiki_repo != origin.url:
-            raise Error(("Wiki repository:\n\t%s\n" % self._github_wiki_repo) +
-                        "not found in directory %s" % wiki_folder)
+        origin.pull
+        os.chdir(repo_dir)
+
+    def init_repo(self, repo_dir):
+
+        if not os.path.isdir(repo_dir):
+            self.clone_repo(repo_dir)
+
+        self.ensure_correct_repository(repo_dir)
+        repo = Repo(repo_dir)
+        return repo
+
+    def clone_repo(self, repo_dir):
+        Repo.clone_from(self._github_wiki_url, repo_dir)
+
+    def ensure_correct_repository(self, repo_dir):
+        repo = Repo(repo_dir)  # can raise InvalidGitRepositoryError
+        origin = repo.remotes.origin  # can raise iterator error
+        if self._github_wiki_url != origin.url:
+            raise Error(("Wiki repository:\n\t%s\n" % self._github_wiki_url) +
+                        "not found in directory %s" % repo_dir)
 
     def edit_mkdocs_config(self):
         """
@@ -161,7 +152,7 @@ class DocBuilder(object):
 
     def build_docs(self):
         """ Builds the documentation HTML pages from the Wiki repository. """
-        self.pull_wiki_repo()
+        self.init_wiki_repo()
         self.edit_mkdocs_config()
         self.build_mkdocs()
         self.create_index()
