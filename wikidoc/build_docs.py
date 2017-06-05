@@ -108,24 +108,13 @@ class DocBuilder(object):
         """
         Creates an HTML index page to redirect to an MkDocs generated page.
         """
-        html_code = \
-            "<!DOCTYPE HTML>\n " \
-            "<html>\n" \
-            "\t<head>\n" \
-            "\t\t<meta charset=\"UTF-8\">\n" \
-            "\t\t<meta http-equiv=\"refresh\" content=\"1;url=%s/index.html\">\n" \
-            % self._index + \
-            "\t\t<script type=\"text/javascript\">\n" \
-            "\t\t\twindow.location.href = \"%s/index.html\"\n" % self._index +\
-            "\t\t</script>\n" \
-            "\t</head>\n" \
-            "\t<body>\n" \
-            "\t\tIf you are not redirected automatically to the " \
-            "%s page, follow this <a href=\"%s/index.html\">link</a>\n"\
-            % (self._index, self._index) + \
-            "\t</body>\n" \
-            "</html>\n"
-
+        from jinja2 import Environment, PackageLoader, select_autoescape
+        env = Environment(
+            loader=PackageLoader('wikidoc', 'templates'),
+            autoescape=select_autoescape(['html', 'xml'])
+        )
+        template = env.get_template('redirect.html')
+        html_code = template.render(target_url=self._index)
         file_name = os.path.join(self._out_dir, "index.html")
 
         if not os.path.exists(file_name):
