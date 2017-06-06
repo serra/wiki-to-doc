@@ -21,9 +21,23 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 [#6]: https://github.com/serra/wiki-to-doc/issues/6
 [#7]: https://github.com/serra/wiki-to-doc/issues/7
 
+## Installing
+
+```
+pip install wikidoc
+wikidoc --help
+```
+
+## Usage
+
+```
+wikidoc build --repo https://github.com/serra/wiki-to-doc.wiki.git --name wiki-to-doc.wiki
+ls ~/wiki-to-doc/sites
+```
+
 ## Developing
 
-Developed using Python3; tested with Python 2.7, 3.4 and 3.6.
+Developed on OSX, Python version 3.6.
 
 ### Prepare environment
 
@@ -31,7 +45,7 @@ Assuming virtualenv 1.7+:
 
 ```
 cd [wiki-to-doc repo]
-virtualenv -p /usr/bin/python3.6 venv
+virtualenv -p /usr/local/bin/python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -55,8 +69,8 @@ sniffer
 Package using pip and setuptools. During development:
 
 ```
-$ . venv/bin/activate
-$ pip install --editable .
+. venv/bin/activate
+pip install --editable .
 
 ```
 
@@ -74,10 +88,7 @@ This will update the version information in
  * setup.py
  * wikidoc/_version.py
 
-It will add a tag to the current commit too.
-
-When this tag is pushed and detected by our CI system, 
-the CI system will create a release and push it to PyPi.
+It will add a version tag to the current commit too.
 
 So to do a patch increment:
 
@@ -89,6 +100,7 @@ git push origin master --tags
 
 ```
 
+<!--
 #### some notes on versioning ...
 
 Do not: 
@@ -104,46 +116,21 @@ Also interesting [PEP 396], [PEP 440] and the [bumpversion] script.
  [PEP 396]: https://www.python.org/dev/peps/pep-0396/
  [PEP 440]: https://www.python.org/dev/peps/pep-0440/
  [bumpversion]: https://pypi.python.org/pypi/bumpversion
-
+-->
 
 ### Publishing
 
-Test if you can package and upload to pypitest:
+Publishing is done when a version tag is pushed to Github.
+This is picked up by Travis, which will do a deploy to PyPI.
+
+Assuming pypi and pypitest configured in `~/pypirc`,
+you can publish from your local machine:
 
 ```
-python setup.py register -r pypitest
+python setup.py register -r [pypi|pypitest]
+python setup.py sdist upload -r [pypi|pypitest]
 ```
 
-Actually upload it:
+[Peter Downs]: http://peterdowns.com/posts/first-time-with-pypi.html
 
-```
-python setup.py sdist upload -r pypitest
-```
-
-We can do the same for PyPi:
-
-```
-python setup.py register -r pypi
-```
-
-And:
-
-```
-python setup.py sdist upload -r pypi
-```
-
-## Installing
-
-```
-pip install wikidoc
-wikidoc --help
-```
-
-
-## Usage
-
-```
-pip install wikidoc
-wikidoc --help
-```
 
