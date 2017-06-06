@@ -8,6 +8,10 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/llriy5we778rua1h?svg=true)](https://ci.appveyor.com/project/serra/wiki-to-doc)
 
+[![PyPI Version][pypi-v-image]][pypi-v-link]
+
+[pypi-v-image]: https://img.shields.io/pypi/v/wikidoc.png
+[pypi-v-link]: https://pypi.python.org/pypi/wikidoc
 
 ## Developing
 
