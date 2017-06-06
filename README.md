@@ -7,8 +7,8 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 | OS | CI status | Python versions |
 |---|---|---|
 | Linux | [![Build Status][travis-img]][travis-link] | 2.7, 3.4, 3.6 |
-| Windows | [![Windows Build status][appveyor-img]][appveyor-link] | 2.7 ~~3.4, 3.6~~ #6 |
-| OS X | N.A. | N.A. #7 |
+| Windows | [![Windows Build status][appveyor-img]][appveyor-link] | 2.7 ~~3.4, 3.6~~ [#6] |
+| OS X | N.A. | N.A. [#7] |
 
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 
@@ -18,6 +18,8 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 [travis-link]: https://travis-ci.org/serra/wiki-to-doc
 [appveyor-img]: https://ci.appveyor.com/api/projects/status/llriy5we778rua1h?svg=true
 [appveyor-link]: https://ci.appveyor.com/project/serra/wiki-to-doc
+[#6]: https://github.com/serra/wiki-to-doc/issues/6
+[#7]: https://github.com/serra/wiki-to-doc/issues/7
 
 ## Developing
 
