@@ -2,7 +2,7 @@
 import context
 from wikidoc import build_docs
 from helpers import WikiToDocTestBase
-
+from pytest import mark
 import unittest
 import os
 
@@ -18,6 +18,7 @@ class OwnWikiToDocTestSuite(WikiToDocTestBase):
         self.assert_exists(out_dir, 'Another-page')
         self.assert_exists(out_dir, 'index.html')
 
+    @mark.slow
     def test_own_wikidoc_when_repo_already_exists(self):
         out_dir = os.path.join(build_docs.WORKING_DIR, 'sites',
                                'wiki-to-doc.wiki')
@@ -27,6 +28,7 @@ class OwnWikiToDocTestSuite(WikiToDocTestBase):
                          'wiki-to-doc.wiki')
         self.assert_exists(out_dir, 'Home')
 
+    @mark.slow
     def test_own_wikidoc_when_repo_does_not_exist(self):
         out_dir = os.path.join(build_docs.WORKING_DIR, 'sites',
                                'wiki-to-doc.wiki')

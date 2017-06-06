@@ -6,6 +6,9 @@ See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
 [![Build Status](https://travis-ci.org/serra/wiki-to-doc.svg?branch=master)](https://travis-ci.org/serra/wiki-to-doc)
 
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/llriy5we778rua1h?svg=true)](https://ci.appveyor.com/project/serra/wiki-to-doc)
+
+
 ## Developing
 
 Developed using Python3; tested with Python 2.7, 3.4 and 3.6.
