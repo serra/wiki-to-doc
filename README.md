@@ -4,11 +4,11 @@ Simple approach to create an offline, static copy of a github wiki.
 
 See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
-| OS | CI status | Python versions |
-|---|---|---|
-| Linux | [![Build Status][travis-img]][travis-link] | 2.7, 3.4, 3.6 |
-| Windows | [![Windows Build status][appveyor-img]][appveyor-link] | 2.7 ~~3.4, 3.6~~ [#6] |
-| OS X | N.A. | N.A. [#7] |
+| OS | CI status | Python versions | Note |
+|---|---|---|---|
+| Linux | [![Build Status][travis-img]][travis-link] | 2.7, 3.4, 3.6 | |
+| Windows | [![Windows Build status][appveyor-img]][appveyor-link] | 2.7 | See [#6] for 3.4 and 3.6 support |
+| OS X | N.A. [#7] | 3.6 | Developed on OS X, Python 3.6 |
 
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 
