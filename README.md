@@ -1,6 +1,10 @@
 # wiki-to-doc
 
-Simple approach to create an offline, static copy of a github wiki.
+Simple approach to create an offline, static copy of a github wiki that is:
+
+ * Readable
+ * Browsable
+ * Searchable
 
 See [the wiki](https://github.com/serra/wiki-to-doc/wiki) for documentation.
 
